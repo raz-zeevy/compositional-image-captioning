@@ -3,14 +3,11 @@
 # Before the first run, go to the coco_caption submodule directory and run:
 # ./get_stanford_models.sh
 import sys
-
 import argparse
-
 from pycocotools.coco import COCO
 from coco_caption.pycocoevalcap.eval import COCOEvalCap
 
 ANNOTATION_FILE_PATH = "coco_caption/annotations/captions_val2014.json"
-
 
 def eval_coco_metrics(results_file):
     coco = COCO(ANNOTATION_FILE_PATH)

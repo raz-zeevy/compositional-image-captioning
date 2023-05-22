@@ -10,7 +10,6 @@ from utils import get_splits_from_occurrences_data
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-
 def get_splits_from_karpathy_json(karpathy_json):
     with open(karpathy_json, "r") as json_file:
         images_data = json.load(json_file)["images"]
