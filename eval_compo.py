@@ -123,6 +123,7 @@ def evaluate(
         print_beam,
         print_captions,
 ):
+    logging.basicConfig(level=logging.DEBUG)
     model_name = os.path.basename(checkpoint_path).split(".")[0]
     logging.info("Model: {}".format(model_name))
 
@@ -199,7 +200,7 @@ def evaluate(
 
         if print_captions:
             logging.info("COCO ID: {}".format(coco_id))
-            logging.info("\t".join(generated_captions[coco_id]))
+            logging.info(" ".join(generated_captions[coco_id]))
             # for caption in generated_captions[coco_id]:
             #     logging.info(
             #         "\n".join(
@@ -223,7 +224,7 @@ def evaluate(
 
     results = []
     for coco_id, top_k_captions in generated_captions.items():
-        caption = "\t".join(top_k_captions)
+        caption = " ".join(top_k_captions)
         results.append({"image_id": int(coco_id), "caption": caption})
     json.dump(results, open(results_output_file_name, "w"))
 
