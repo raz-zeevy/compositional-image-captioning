@@ -195,8 +195,9 @@ def evaluate(
         # Change the size of the beam to eval_beam_size
         # old version
         # generated_captions[coco_id] = top_k_generated_captions[:eval_beam_size]
-        generated_beams[coco_id] = generated_beams[coco_id][
-                                      :eval_beam_size]
+        if store_beam:
+            generated_beams[coco_id] = generated_beams[coco_id][
+                                          :eval_beam_size]
 
         if print_captions:
             logging.info("COCO ID: {}".format(coco_id))
