@@ -123,7 +123,7 @@ def evaluate(
         print_beam,
         print_captions,
 ):
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     model_name = os.path.basename(checkpoint_path).split(".")[0]
     logging.info("Model: {}".format(model_name))
 
@@ -283,6 +283,7 @@ def calculate_metric(
         bleu_scores = [float("%.2f" % elem) for elem in bleu_scores]
         logging.info(
             "\nBLEU score @ beam size {} is {}".format(beam_size, bleu_scores))
+        print("\nBLEU score @ beam size {} is {}".format(beam_size, bleu_scores))
     # elif metric_name == METRIC_RECALL:
     #     recall_pairs(generated_captions, word_map, heldout_pairs,
     #                  output_file_name)
