@@ -247,10 +247,10 @@ def calculate_metric(
         target_captions : Dict[int, List[str]],
         generated_captions : Dict[int, str],
         generated_beams : Dict[int, List[str]],
-        word_map,
-        heldout_pairs,
+        # word_map,
+        # heldout_pairs,
         beam_size,
-        output_file_name,
+        # output_file_name,
 ):
     if metric_name == METRIC_BLEU:
         '''
