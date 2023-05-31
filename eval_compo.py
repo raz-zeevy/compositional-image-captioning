@@ -123,8 +123,6 @@ def evaluate(
         print_beam,
         print_captions,
 ):
-    # Load model
-    checkpoint = torch.load(checkpoint_path, map_location=device)
     model_name = os.path.basename(checkpoint_path).split(".")[0]
     logging.info("Model: {}".format(model_name))
 
@@ -138,7 +136,7 @@ def evaluate(
     # create Predictor
     from clip_utils.predict import Predictor
     predictor = Predictor()
-    predictor.setup()
+    predictor.setup(checkpoint_path)
 
     use_beam_search = True
     # Lists for target captions and generated captions for each imag
