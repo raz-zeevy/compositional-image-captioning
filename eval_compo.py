@@ -123,7 +123,7 @@ def evaluate(
         print_beam,
         print_captions,
 ):
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     model_name = os.path.basename(checkpoint_path).split(".")[0]
     logging.info("Model: {}".format(model_name))
 
@@ -195,12 +195,12 @@ def evaluate(
         # Change the size of the beam to eval_beam_size
         # old version
         # generated_captions[coco_id] = top_k_generated_captions[:eval_beam_size]
-        generated_captions[coco_id] = generated_captions[coco_id][
+        generated_beams[coco_id] = generated_beams[coco_id][
                                       :eval_beam_size]
 
         if print_captions:
             logging.info("COCO ID: {}".format(coco_id))
-            logging.info(" ".join(generated_captions[coco_id]))
+            logging.info(generated_captions[coco_id])
             # for caption in generated_captions[coco_id]:
             #     logging.info(
             #         "\n".join(
@@ -223,8 +223,7 @@ def evaluate(
     results_output_file_name = "results_" + name + ".json"
 
     results = []
-    for coco_id, top_k_captions in generated_captions.items():
-        caption = " ".join(top_k_captions)
+    for coco_id, caption in generated_captions.items():
         results.append({"image_id": int(coco_id), "caption": caption})
     json.dump(results, open(results_output_file_name, "w"))
 
