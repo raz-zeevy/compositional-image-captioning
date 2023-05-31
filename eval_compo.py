@@ -134,7 +134,7 @@ def evaluate(
         test_ids = json.load(file)['test_images_split']
         test_ids = list(map(lambda x: int(x), test_ids))
     #load captions:
-    captions_series = get_captions(annotaions_path,test_ids)
+    captions_series = get_captions(annotations_path,test_ids)
     # create Predictor
     from clip_utils.predict import Predictor
     predictor = Predictor()
