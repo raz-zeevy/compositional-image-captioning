@@ -134,7 +134,7 @@ def evaluate(
         test_ids = json.load(file)['test_images_split']
         test_ids = list(map(lambda x: int(x), test_ids))
     #load captions:
-    captions_series = get_captions(annotations_path,test_ids)
+    captions_series = get_captions(test_ids, annotations_path)
     # create Predictor
     from clip_utils.predict import Predictor
     predictor = Predictor()
@@ -298,9 +298,9 @@ def calculate_metric(
     #     )
 
 
-def get_captions(test_ids: list) -> pandas.Series:
+def get_captions(test_ids: list, annotations_path : str) -> pandas.Series:
     import pandas as pd
-    with open('./datasets/annotations/captions_val2014.json', 'r') as f:
+    with open(annotations_path, 'r') as f:
         data = json.load(f)
     captions = pd.DataFrame(data['annotations']).set_index('image_id')
     captions = captions.loc[test_ids]
