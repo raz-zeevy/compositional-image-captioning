@@ -114,6 +114,7 @@ def evaluate(
         coco_val_folder,
         annotations_path,
         checkpoint_path,
+        output_folder,
         metrics,
         beam_size,
         eval_beam_size,
@@ -222,11 +223,11 @@ def evaluate(
     if nucleus_sampling:
         name += "_nucleus_sampling_p_" + str(nucleus_sampling)
     results_output_file_name = "results_" + name + ".json"
-
+    results_output_path = os.path.join(output_folder, results_output_file_name)
     results = []
     for coco_id, caption in generated_captions.items():
         results.append({"image_id": int(coco_id), "caption": caption})
-    json.dump(results, open(results_output_file_name, "w"))
+    json.dump(results, open(results_output_path, "w"))
 
     # Calculate metric scores
     # eval_output_file_name = "eval_" + name + ".json"
@@ -310,19 +311,19 @@ def get_captions(test_ids: list, annotations_path : str) -> pandas.Series:
 def check_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--coco_val_folder",
+        "--coco-val-folder",
         help="Folder where the COCO validation images are located",
         default=os.path.expanduser("datasets/val2014/"),
         # TODO: required=True
     )
     parser.add_argument(
-        "--annotations_path",
+        "--annotations-path",
         help="Path to the json file containing the annotations",
         default=os.path.expanduser("datasets/annotations/captions_val2014.json"),
         # TODO: required=True
     )
     parser.add_argument(
-        "--split_dataset_path", help="Json file with the split id's",
+        "--split-dataset-path", help="Json file with the split id's",
         default=os.path.expanduser(
             "data/dataset_splits/dataset_splits_1.json"),
         # TODO: required=True
@@ -332,6 +333,10 @@ def check_args(args):
         default=os.path.expanduser(
             "checkpoint/coco_prefix_latest.pt"),
         # TODO: required=True
+    )
+    parser.add_argument(
+        "--output-folder", help="Folder for the output results",
+        default="",
     )
     parser.add_argument(
         "--metrics",
@@ -398,6 +403,7 @@ if __name__ == "__main__":
         annotations_path=parsed_args.annotations_path,
         split_dataset_path=parsed_args.split_dataset_path,
         checkpoint_path=parsed_args.checkpoint,
+        output_folder=parsed_args.output_folder,
         metrics=parsed_args.metrics,
         beam_size=parsed_args.beam_size,
         eval_beam_size=parsed_args.eval_beam_size,
