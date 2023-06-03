@@ -125,8 +125,10 @@ def evaluate(
         print_captions,
 ):
     logging.basicConfig(level=logging.DEBUG)
+    split_id = os.path.basename(split_dataset_path).split(".")[0].split(
+        "_")[-1]
     model_name = os.path.basename(checkpoint_path).split(".")[0]
-    logging.info("Model: {}".format(model_name))
+    print("Model: {} split: {}".format(model_name, split_id))
 
     # Load test_ids
     test_ids = []
@@ -217,7 +219,8 @@ def evaluate(
     assert len(target_captions) == len(generated_captions)
 
     # Save results
-    name = str(os.path.basename(checkpoint_path).split(".")[0])
+    name = str(os.path.basename(checkpoint_path).split(".")[0]) + "_" + str(
+        split_id)
     if re_ranking:
         name += "_re_ranking"
     if nucleus_sampling:
