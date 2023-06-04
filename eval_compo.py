@@ -33,6 +33,8 @@ from utils import (
     MODEL_BOTTOM_UP_TOP_DOWN_RANKING,
 )
 
+FULL_DATA = "full_data"
+
 # from analysis_utils.visualize_attention import visualize_attention
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -127,17 +129,24 @@ def evaluate(
     logging.basicConfig(level=logging.DEBUG)
     split_id = os.path.basename(split_dataset_path).split(".")[0].split(
         "_")[-1]
+    if split_dataset_path.endswith("full_data.json"):
+        split_id = FULL_DATA
     model_name = os.path.basename(checkpoint_path).split(".")[0]
     print("Model: {} split: {}".format(model_name, split_id))
 
     # Load test_ids
     test_ids = []
-    with open(split_dataset_path, "r") as file:
-        if split_dataset_path.endswith("full_data.json"):
-            test_ids = json.load(file)['val_images_split']
-        else:
+    if split_id == FULL_DATA:
+        for i in range(1,5):
+            file_name = rf"\dataset_splits_{i}.json"
+            split_dataset_path = r"data\dataset_splits" + file_name
+            with open(split_dataset_path, "r") as file:
+                test_ids += json.load(file)['test_images_split']
+        list(set(test_ids))
+    else:
+        with open(split_dataset_path, "r") as file:
             test_ids = json.load(file)['test_images_split']
-        test_ids = list(map(lambda x: int(x), test_ids))
+    test_ids = list(map(lambda x: int(x), test_ids))
     #load captions:
     captions_series = get_captions(test_ids, annotations_path)
     # create Predictor
@@ -348,7 +357,7 @@ def check_args(args):
         "--metrics",
         help="Evaluation metrics",
         nargs="+",
-        default=[METRIC_BLEU],
+        default=[METRIC_BLEU, METRIC_RECALL],
         choices=[METRIC_BLEU, METRIC_RECALL, METRIC_BEAM_OCCURRENCES],
     )
 
