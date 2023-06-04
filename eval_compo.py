@@ -138,8 +138,8 @@ def evaluate(
     test_ids = []
     if split_id == FULL_DATA:
         for i in range(1,5):
-            file_name = rf"\dataset_splits_{i}.json"
-            split_dataset_path = r"data\dataset_splits" + file_name
+            file_name = f"/dataset_splits_{i}.json"
+            split_dataset_path = r"data/dataset_splits" + file_name
             with open(split_dataset_path, "r") as file:
                 test_ids += json.load(file)['test_images_split']
         list(set(test_ids))
