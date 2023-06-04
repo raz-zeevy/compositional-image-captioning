@@ -133,7 +133,10 @@ def evaluate(
     # Load test_ids
     test_ids = []
     with open(split_dataset_path, "r") as file:
-        test_ids = json.load(file)['test_images_split']
+        if split_dataset_path.endswith("full_data.json"):
+            test_ids = json.load(file)['val_images_split']
+        else:
+            test_ids = json.load(file)['test_images_split']
         test_ids = list(map(lambda x: int(x), test_ids))
     #load captions:
     captions_series = get_captions(test_ids, annotations_path)
