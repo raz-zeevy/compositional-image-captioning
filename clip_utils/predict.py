@@ -17,7 +17,7 @@ from transformers import (
 )
 import skimage.io as io
 import PIL.Image
-import linguistic_tokenizer as lt
+import clip_utils.linguistic_tokenizer as lt
 
 import cog
 
