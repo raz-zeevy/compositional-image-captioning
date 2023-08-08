@@ -329,8 +329,7 @@ def check_args(args):
     parser.add_argument(
         "--coco-val-folder",
         help="Folder where the COCO validation images are located",
-        default=os.path.expanduser("datasets/val2014/"),
-        # TODO: required=True
+        required=True,
     )
     parser.add_argument(
         "--annotations-path",
@@ -340,15 +339,11 @@ def check_args(args):
     )
     parser.add_argument(
         "--split-dataset-path", help="Json file with the split id's",
-        default=os.path.expanduser(
-            "data/dataset_splits/dataset_splits_1.json"),
-        # TODO: required=True
+        required=True,
     )
     parser.add_argument(
         "--checkpoint", help="Path to checkpoint of trained model",
-        default=os.path.expanduser(
-            "checkpoint/coco_prefix_latest.pt"),
-        # TODO: required=True
+        required=True,
     )
     parser.add_argument(
         "--output-folder", help="Folder for the output results",
@@ -414,9 +409,6 @@ if __name__ == "__main__":
     #     level=logging.INFO,
     # )
     logging.info(parsed_args)
-    print(f"model path {parsed_args.checkpoint}"
-          f" os.path.dirname = {os.path.dirname(parsed_args.checkpoint)}")
-    quit()
     evaluate(
         coco_val_folder=parsed_args.coco_val_folder,
         annotations_path=parsed_args.annotations_path,

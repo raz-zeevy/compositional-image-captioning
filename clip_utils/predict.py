@@ -54,8 +54,6 @@ class Predictor(cog.BasePredictor):
             "ViT-B/32", device=self.device, jit=False,
             download_root="/cs/snapless/oabend/raz.zeevy/CLIP_prefix_caption/model"
         )
-        print(f"model path {model_path}"
-              f" os.path.dirname = {os.path.dirname(model_path)}")
         self.tokenizer = lt.load_tokenizer(
             os.path.join(os.path.dirname(model_path),
                          'tokenizer'))
