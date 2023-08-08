@@ -414,6 +414,9 @@ if __name__ == "__main__":
     #     level=logging.INFO,
     # )
     logging.info(parsed_args)
+    print(f"model path {parsed_args.checkpoint}"
+          f" os.path.dirname = {os.path.dirname(parsed_args.checkpoint)}")
+    quit()
     evaluate(
         coco_val_folder=parsed_args.coco_val_folder,
         annotations_path=parsed_args.annotations_path,
