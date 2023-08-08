@@ -1,3 +1,5 @@
+import os
+
 TAGS = dict(
     NUMERALS='numerals',
     NEGATION='negation',
@@ -35,5 +37,9 @@ def save_tokenizer(tokenizer, path):
 
 def load_tokenizer(path):
     from transformers import GPT2Tokenizer
+    # check if folder doesnt exists
+    if not os.path.exists(path):
+        raise Exception("tokenizer folder doesnt exists:\n"
+                        f"{path}")
     tokenizer = GPT2Tokenizer.from_pretrained(path)
     return tokenizer
