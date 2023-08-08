@@ -56,7 +56,6 @@ class Predictor(cog.BasePredictor):
         )
         print(f"model path {model_path}"
               f" os.path.dirname = {os.path.dirname(model_path)}")
-        quit()
         self.tokenizer = lt.load_tokenizer(
             os.path.join(os.path.dirname(model_path),
                          'tokenizer'))
