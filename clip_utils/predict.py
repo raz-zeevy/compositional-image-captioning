@@ -17,6 +17,7 @@ from transformers import (
 )
 import skimage.io as io
 import PIL.Image
+import linguistic_tokenizer as lt
 
 import cog
 
@@ -46,18 +47,21 @@ CPU = torch.device("cpu")
 
 
 class Predictor(cog.BasePredictor):
-    def setup(self, weights_path = "coco_train/coco_prefix_latest.pt"):
+    def setup(self, model_path):
         """Load the model into memory to make running multiple predictions efficient"""
         self.device = torch.device("cuda")
         self.clip_model, self.preprocess = clip.load(
-            "ViT-B/32", device=self.device, jit=False
+            "ViT-B/32", device=self.device, jit=False,
+            download_root="/cs/snapless/oabend/raz.zeevy/CLIP_prefix_caption/model"
         )
-        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-
+        self.tokenizer = lt.load_tokenizer(
+            os.path.join(os.path.dirname(model_path),
+                         'tokenizer'))
         self.models = {}
         self.prefix_length = 10
-        model = ClipCaptionModel(self.prefix_length)
-        model.load_state_dict(torch.load(weights_path, map_location=CPU))
+        model = ClipCaptionModel(self.prefix_length,
+                                 tokenizer_folder=os.path.dirname(model_path))
+        model.load_state_dict(torch.load(model_path, map_location=CPU))
         model = model.eval()
         model = model.to(self.device)
         self.models['coco'] = model
@@ -106,7 +110,6 @@ class MLP(nn.Module):
                 layers.append(act())
         self.model = nn.Sequential(*layers)
 
-
 class ClipCaptionModel(nn.Module):
 
     # @functools.lru_cache #FIXME
@@ -131,10 +134,15 @@ class ClipCaptionModel(nn.Module):
         out = self.gpt(inputs_embeds=embedding_cat, labels=labels, attention_mask=mask)
         return out
 
-    def __init__(self, prefix_length: int, prefix_size: int = 512):
+    def __init__(self, prefix_length: int, prefix_size: int = 512,
+                 tokenizer_folder: str = None):
         super(ClipCaptionModel, self).__init__()
         self.prefix_length = prefix_length
         self.gpt = GPT2LMHeadModel.from_pretrained("gpt2")
+        if tokenizer_folder:
+            self.tokenizer = lt.load_tokenizer(os.path.join(tokenizer_folder,
+                                                            'tokenizer'))
+            self.gpt.resize_token_embeddings(len(self.tokenizer))
         self.gpt_embedding_size = self.gpt.transformer.wte.weight.shape[1]
         if prefix_length > 10:  # not enough memory
             self.clip_project = nn.Linear(
