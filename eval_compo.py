@@ -1,4 +1,5 @@
-"""Evaluate an image captioning model on the specified evaluation set using the specified set of evaluation metrics"""
+"""Evaluate an image captioning model on the specified evaluation set
+using the specified set of evaluation metrics"""
 
 import logging
 
@@ -133,7 +134,7 @@ def evaluate(
         split_id = FULL_DATA
     model_name = os.path.basename(checkpoint_path).split(".")[0]
     print("Model: {} split: {}".format(model_name, split_id))
-
+    if not output_folder: output_folder = os.path.dirname(checkpoint_path)
     # Load test_ids
     test_ids = []
     if split_id == FULL_DATA:
