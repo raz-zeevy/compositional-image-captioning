@@ -126,6 +126,7 @@ def evaluate(
         visualize,
         print_beam,
         print_captions,
+        out_name
 ):
     logging.basicConfig(level=logging.DEBUG)
     split_id = os.path.basename(split_dataset_path).split(".")[0].split(
@@ -232,13 +233,14 @@ def evaluate(
     assert len(target_captions) == len(generated_captions)
 
     # Save results
-    name = str(os.path.basename(checkpoint_path).split(".")[0]) + "_" + str(
-        split_id)
+    if not out_name:
+        out_name = str(os.path.basename(checkpoint_path).split(".")[0]) + "_" + str(
+            split_id)
     if re_ranking:
-        name += "_re_ranking"
+        out_name += "_re_ranking"
     if nucleus_sampling:
-        name += "_nucleus_sampling_p_" + str(nucleus_sampling)
-    results_output_file_name = "results_" + name + ".json"
+        out_name += "_nucleus_sampling_p_" + str(nucleus_sampling)
+    results_output_file_name = "results_" + out_name + ".json"
     results_output_path = os.path.join(output_folder, results_output_file_name)
     results = []
     for coco_id, caption in generated_captions.items():
@@ -346,6 +348,10 @@ def check_args(args):
         required=True,
     )
     parser.add_argument(
+        "--out-name", help="name of the output file",
+        default="",
+    )
+    parser.add_argument(
         "--output-folder", help="Folder for the output results",
         default="",
     )
@@ -423,6 +429,7 @@ if __name__ == "__main__":
         visualize=parsed_args.visualize_attention,
         print_beam=parsed_args.print_beam,
         print_captions=parsed_args.print_captions,
+        out_name = parsed_args.out_name,
     )
     # hypo = "Almost everything we want can be achieved through kosher"
     # ref = "Almost everything we want can be achieved through kosher"
