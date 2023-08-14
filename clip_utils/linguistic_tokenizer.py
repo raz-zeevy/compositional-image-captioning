@@ -35,11 +35,14 @@ def create_tokenizer(gpt2_type: str):
 def save_tokenizer(tokenizer, path):
     tokenizer.save_pretrained(path)
 
-def load_tokenizer(path):
+def load_tokenizer(path, required=True):
     from transformers import GPT2Tokenizer
     # check if folder doesnt exists
     if not os.path.exists(path):
-        raise Exception("tokenizer folder doesnt exists:\n"
-                        f"{path}")
+        if required:
+            raise Exception("tokenizer folder doesnt exists:\n"
+                            f"{path}")
+        else:
+            return GPT2Tokenizer.from_pretrained('gpt2')
     tokenizer = GPT2Tokenizer.from_pretrained(path)
     return tokenizer

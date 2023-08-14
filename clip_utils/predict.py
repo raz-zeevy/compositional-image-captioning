@@ -56,7 +56,7 @@ class Predictor(cog.BasePredictor):
         )
         self.tokenizer = lt.load_tokenizer(
             os.path.join(os.path.dirname(model_path),
-                         'tokenizer'))
+                         'tokenizer'), required=False)
         self.models = {}
         self.prefix_length = 10
         model = ClipCaptionModel(self.prefix_length,
