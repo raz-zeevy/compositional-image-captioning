@@ -141,7 +141,8 @@ class ClipCaptionModel(nn.Module):
         self.gpt = GPT2LMHeadModel.from_pretrained("gpt2")
         if tokenizer_folder:
             self.tokenizer = lt.load_tokenizer(os.path.join(tokenizer_folder,
-                                                            'tokenizer'))
+                                                            'tokenizer'),
+                                               required=False)
             self.gpt.resize_token_embeddings(len(self.tokenizer))
         self.gpt_embedding_size = self.gpt.transformer.wte.weight.shape[1]
         if prefix_length > 10:  # not enough memory
